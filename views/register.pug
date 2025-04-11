@@ -1,0 +1,177 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Login
+    style.
+      /* Parte HEADER */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #006ebc;
+        padding: 15px 30px;
+        color: white;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+      }
+
+      .header-left img {
+        width: 10rem;
+        margin-right: 20px;
+      }
+
+      .header-left ul,
+      .header-right ul {
+        list-style: none;
+        display: flex;
+        padding: 0;
+        margin: 0;
+      }
+
+      .header-left li,
+      .header-right li {
+        margin-right: 20px;
+      }
+
+      a {
+        text-decoration: none;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      a:hover {
+        background-color: white;
+        color: #006ebc;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+      }
+
+      /* FIN HEADER */
+
+      /* Parte LOGIN (solo para el formulario, no para todo el body) */
+      .login-page {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f2f2f2;
+      }
+
+      /* Contenedor principal para centrar el formulario en el área restante */
+      .main-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 90px);
+        /* 90px es una aproximación a la altura del header */
+      }
+
+      .login-container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+
+      .login-container h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #45a049;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .footer a {
+        color: #4CAF50;
+        text-decoration: none;
+      }
+    script(defer type="module" src="./js/app.js")
+  
+  body.login-page
+    header
+      div.header-left
+        a(href="index.html")
+          img(src="./img/pj10-removebg-preview.png" alt="Logo")
+        ul
+          li
+            a(href="historicos.html") Históricos
+          li
+            a(href="economicos.html") Económicos
+          li
+            a(href="culturales.html") Culturales
+          li
+            a(href="tecnologicos.html") Tecnológicos
+          li
+            a(href="quiz.html") QUIZ
+          li
+            a(href="urlFiltro.html") URL FILTRO
+      div.header-right
+        ul#user-menu
+          li
+            a(href="register.html") Register
+    
+    div.main-container
+      div.login-container
+        h2 Registrarse
+        form#registerForm
+          div.input-group
+            label(for="username") Usuario
+            input#username(type="text" name="username" placeholder="Introduce tu usuario" required)
+          div.input-group
+            label(for="password") Contraseña
+            input#password(type="password" name="password" placeholder="Introduce tu contraseña" required)
+          button#register.btn Registrarse
+        div.footer
+          p
+            a(href="login.html") ¿Ya tienes cuenta? Inicia sesión
+    
+    div#register-mensaje

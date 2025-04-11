@@ -1,0 +1,88 @@
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Administración
+    script(defer type="module" src="./js/app.js")
+    link(rel="stylesheet" href="./css/home.css")
+    style.
+      #lista-usuarios {
+          list-style: none;
+          padding: 0;
+          width: 50%;
+          margin: auto;
+          border-radius: 10px;
+          background: #f8f9fa;
+          padding: 10px;
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      #lista-usuarios li {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: #ffffff;
+          padding: 8px 15px;
+          margin: 5px 0;
+          border-radius: 5px;
+          border: 1px solid #ddd;
+      }
+
+      .modificar,
+      .eliminar {
+          border: none;
+          padding: 5px 10px;
+          cursor: pointer;
+          border-radius: 5px;
+          font-weight: bold;
+      }
+
+      .modificar {
+          background-color: #007bff;
+          color: white;
+      }
+
+      .eliminar {
+          background-color: #dc3545;
+          color: white;
+      }
+
+      .modificar:hover {
+          background-color: #0056b3;
+      }
+
+      .eliminar:hover {
+          background-color: #c82333;
+      }
+      button {
+          margin: 5px;
+      }
+  
+  header
+    div.header-left
+      a(href="index.html")
+        img(src="./img/pj10-removebg-preview.png" alt="Logo")
+      ul
+        li
+          a(href="#historicos") Históricos
+        li
+          a(href="#economicos") Económicos
+        li
+          a(href="#culturales") Culturales
+        li
+          a(href="#tecnologicos") Tecnológicos
+        li
+          a(href="#desafios") Desafíos y Oportunidades
+        li
+          a(href="quiz.html") QUIZ
+        li
+          a(href="urlFiltro.html") URL FILTRO
+    div.header-right
+      ul#user-menu
+        li
+          a(href="register.html") Register
+  
+  body
+    h2 Panel de Administración
+    ul#lista-usuarios.lista-usuarios
+    script(defer type="module" src="./js/app.js")

@@ -1,0 +1,130 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="./css/home.css")
+    title Timeline Quiz
+    style.
+      /* Parte HEADER */
+      header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #006ebc;
+          padding: 15px 30px;
+          color: white;
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+          width: 100%;
+      }
+
+      .header-left {
+          display: flex;
+          align-items: center;
+      }
+
+      .header-left img {
+          width: 10rem;
+          margin-right: 20px;
+      }
+
+      .header-left ul,
+      .header-right ul {
+          list-style: none;
+          display: flex;
+          padding: 0;
+          margin: 0;
+      }
+
+      .header-left li,
+      .header-right li {
+          margin-right: 20px;
+      }
+
+      a {
+          text-decoration: none;
+          color: white;
+          font-size: 18px;
+          font-weight: bold;
+          padding: 10px 15px;
+          border-radius: 5px;
+          transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      a:hover {
+          background-color: white;
+          color: #006ebc;
+      }
+
+      .header-right {
+          display: flex;
+          align-items: center;
+          margin-left: auto;
+      } 
+
+      .timeline,
+      .drop {
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+      }
+      .drop-zone {
+          width: 200px;
+          height: 180px;
+          border: 2px solid #aaa;
+          background-color: #fff;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-radius: 10px;
+      }
+      .drop-zone span {
+          font-weight: bold;
+          margin-bottom: 10px;
+      }
+
+      .drop-zone.over {
+          background-color: #c8e6c9;
+      }
+
+      .img {
+          width: 120px;
+          height: 120px;
+          cursor: grab;
+      }
+      .result {
+          margin-top: 20px;
+          font-size: 18px;
+          font-weight: bold;
+      }
+  
+  body
+    header
+      div.header-left
+        a(href="index.html")
+          img(src="./img/pj10-removebg-preview.png" alt="Logo")
+        ul
+          li
+            a(href="historicos.html") Históricos
+          li
+            a(href="economicos.html") Económicos
+          li
+            a(href="culturales.html") Culturales
+          li
+            a(href="tecnologicos.html") Tecnológicos
+          li
+            a(href="quiz.html") QUIZ
+          li
+            a(href="urlFiltro.html") URL FILTRO
+      div.header-right
+        ul#user-menu
+          li
+            a(href="register.html") Register
+    
+    h1#quiz-title Timeline Quiz: Historia
+    div#timeline.timeline
+    div#drop.drop
+    div#result.result
+    
+    script(type="module" src="./js/app.js")

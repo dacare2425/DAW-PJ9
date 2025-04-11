@@ -1,0 +1,66 @@
+.informacion-section {
+    display: flex;
+    justify-content: center;
+    margin: 2vw 0;
+}
+
+.informacion-content {
+    display: flex;
+    align-items: center;
+    gap: 3vw;
+    max-width: 80%;
+    background: #f9f9f9;
+    padding: 2vw;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.informacion-content.reverse {
+    flex-direction: row-reverse;
+}
+
+.informacion-content img {
+    width: 50%;
+    border-radius: 0.5vw;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+}
+
+.informacion-text {
+    width: 90%;
+}
+
+.informacion-text h2 {
+    font-size: 2.5vw;
+    color: rgb(44, 62, 80);
+    margin-bottom: 1vw;
+}
+
+.informacion-text p {
+    font-size: 1.2vw;
+    width: 100%;
+    color: rgb(127, 140, 141);
+    line-height: 1.5;
+}
+
+.informacion-text ul {
+    list-style: none;
+    padding: 0;
+}
+
+.informacion-text li {
+    font-size: 1.1vw;
+    color: rgb(44, 62, 80);
+    margin-bottom: 0.5vw;
+    padding-left: 1vw;
+    position: relative;
+}
+
+.informacion-text li::before {
+    content: "\2022";
+    color: #00796b;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}

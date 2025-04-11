@@ -1,0 +1,178 @@
+
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #ffffff, #c4d7f6); 
+    height: max-content;
+    color: #333;
+        height: 2500px;
+    
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #006ebc; 
+    padding: 15px 30px;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left img {
+    width: 10rem;
+    margin-right: 20px;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    margin-right: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a:hover {
+    background-color: white;
+    color: #006ebc;
+}
+
+
+
+
+main section {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    padding: 20px;
+    gap: 20px;
+}
+
+
+main section.left {
+    flex-direction: row;
+}
+
+main section.right {
+    flex-direction: row-reverse;
+}
+
+main h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+main p, main ul {
+    color: #555;
+}
+
+
+
+.about-section {
+    display: flex;
+    justify-content: center;
+    margin: 2vw 0;
+}
+
+.about-content {
+    display: flex;
+    align-items: center;
+    gap: 3vw;
+    max-width: 80%;
+}
+
+.about-content.reverse {
+    flex-direction: row-reverse;
+}
+
+.about-content img {
+    width: 50%;
+    border-radius: 0.5vw;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+}
+
+.text {
+    width: 90%;
+}
+
+.text h2 {
+    font-size: 2.5vw;
+    color: rgb(44, 62, 80);
+    margin-bottom: 1vw;
+}
+
+.text p {
+    font-size: 1.2vw;
+    width: 100%;
+    color: rgb(127, 140, 141);
+    line-height: 1.5;
+}
+
+.dark-background{
+    background-color: #006ebc;
+}
+
+.dark-background .text h2,
+.dark-background .text p {
+    color: rgb(255, 255, 255); 
+}
+
+.mundoImg {
+    width: 100%;
+
+}
+
+.square {
+    background-color: #00796b;
+}
+
+
+table {
+    width: 80%;
+    height: 200px;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+th, td {
+    border: 1px solid #000;
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+}
+.celda {
+    background-color: #f0f0f0;
+}
+.draggable {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #d1e7dd;
+    border: 1px solid #0f5132;
+    border-radius: 5px;
+    cursor: grab;
+}
+.drag-over {
+    background-color: #cfe2ff;
+}
+

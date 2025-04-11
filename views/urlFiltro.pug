@@ -1,0 +1,132 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" type="text/css" href="./css/home.css")
+    link(rel="stylesheet" type="text/css" href="./css/filtrador.css")
+    link(rel="stylesheet" type="text/css" href="./css/informacion.css")
+    title Información de Países
+    style.
+      body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+      }
+      .pais-info {
+          margin-top: 20px;
+      }
+      .pais-info h2 {
+          margin-top: 20px;
+      }
+      .pais-info ul {
+          list-style-type: none;
+          padding: 0;
+      }
+      .pais-info img {
+          max-width: 200px;
+          margin-top: 20px;
+      }
+  body
+    header
+      div.header-left
+        a(href="index.html")
+          img(src="./img/pj10-removebg-preview.png" alt="Logo")
+        ul
+          li
+            a(href="historicos.html") Históricos
+          li
+            a(href="economicos.html") Económicos
+          li
+            a(href="culturales.html") Culturales
+          li
+            a(href="tecnologicos.html") Tecnológicos
+          li
+            a(href="quiz.html") QUIZ
+          li
+            a(href="urlFiltro.html") URL FILTRO
+      div.header-right
+        ul#user-menu
+          li
+            a(href="register.html") Register
+
+    h1 Selecciona un país para ver la información
+    canvas#canva(width="1")
+
+    div.form-container
+      label(for="paisSelect") Selecciona un país
+      select#paisSelect
+        option(value="Islandia") Islandia
+        option(value="Irlanda") Irlanda
+        option(value="UK") Reino Unido
+        option(value="Francia") Francia
+        option(value="España") España
+        option(value="Portugal") Portugal
+        option(value="Bélgica") Bélgica
+        option(value="Países Bajos") Países Bajos
+        option(value="Alemania") Alemania
+        option(value="Suiza") Suiza
+        option(value="Italia") Italia
+        option(value="Austria") Austria
+        option(value="Chequia") República Checa
+        option(value="Eslovaquia") Eslovaquia
+        option(value="Hungria") Hungría
+        option(value="Polonia") Polonia
+        option(value="Dinamarca") Dinamarca
+        option(value="Noruega") Noruega
+        option(value="Suecia") Suecia
+        option(value="Finlandia") Finlandia
+        option(value="Estonia") Estonia
+        option(value="Letonia") Letonia
+        option(value="Lituania") Lituania
+        option(value="Belarus") Bielorrusia
+        option(value="Ucrania") Ucrania
+        option(value="Moldavia") Moldavia
+        option(value="Romania") Rumanía
+        option(value="Bulgaria") Bulgaria
+        option(value="Grecia") Grecia
+        option(value="Turquía") Turquía
+        option(value="Albania") Albania
+        option(value="Macedonia") Macedonia del Norte
+        option(value="Serbia") Serbia
+        option(value="Bosnia y Herzegovina") Bosnia y Herzegovina
+        option(value="Croacia") Croacia
+        option(value="Eslovenia") Eslovenia
+        option(value="Montenegro") Montenegro
+        option(value="Malta") Malta
+        option(value="Chipre") Chipre
+        option(value="Rusia") Rusia
+      
+      label FACTORES
+      div.checkbox-group
+        input(type="checkbox" id="historicos")
+        label(for="historicos") Histórico
+        
+        input(type="checkbox" id="culturales")
+        label(for="culturales") Cultural
+        
+        input(type="checkbox" id="tecnologicos")
+        label(for="tecnologicos") Tecnológico
+        
+        input(type="checkbox" id="economicos")
+        label(for="economicos") Económico
+      
+      label CARACTERÍSTICAS
+      div.checkbox-group
+        input(type="checkbox" id="consecuencias_efectos")
+        label(for="consecuencias_efectos") Consecuencias y efectos
+        
+        input(type="checkbox" id="oportunidades")
+        label(for="oportunidades") Oportunidades
+        
+        input(type="checkbox" id="analisis_demografico")
+        label(for="analisis_demografico") Demográfico
+        
+        input(type="checkbox" id="proyecciones_a_futuro")
+        label(for="proyecciones_a_futuro") Proyecciones a futuro
+        
+        input(type="checkbox" id="posibles_soluciones")
+        label(for="posibles_soluciones") Posibles soluciones
+    
+    div#paisInfo.pais-info
+    
+    script(defer type="module" src="./js/app.js")

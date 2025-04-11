@@ -1,0 +1,88 @@
+/* Contenedor general con diseño más horizontal */
+.form-container {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: white;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    overflow: hidden;
+}
+
+/* Estilo para el select */
+.select-container {
+    flex-shrink: 0;
+}
+
+#paisSelect {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: 2px solid #00796b;
+    border-radius: 30px;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#paisSelect:hover {
+    border-color: #004d40;
+}
+
+#paisSelect:focus {
+    outline: none;
+    border-color: #004d40;
+    box-shadow: 0 0 5px rgba(0, 125, 125, 0.5);
+}
+
+/* Contenedor para checkboxes */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* Estilo para cada checkbox y su etiqueta */
+.checkbox-group input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    background-color: #e3f2fd;
+    padding: 8px 15px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+    border: 2px solid transparent;
+    white-space: nowrap;
+}
+
+/* Efecto hover y checked */
+.checkbox-group label:hover {
+    transform: scale(1.05);
+}
+
+.checkbox-group input[type="checkbox"]:checked + label {
+    background-color: #00796b;
+    color: white;
+    border: 2px solid #004d40;
+}
+
+/* Ajuste para información del país */
+#paisInfo {
+    margin-left: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
