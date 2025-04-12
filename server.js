@@ -6,6 +6,61 @@ const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const pug = require("pug");
 
+// 🏗️ Clases de Usuarios
+class Usuario {
+  constructor(nom, contrasenya, rol = "cliente") {
+    this.nom = nom;
+    this.contrasenya = contrasenya;
+    this.rol = rol;
+  }
+
+  async encryptPassword() {
+    const salt = await bcrypt.genSalt(10);
+    this.contrasenya = await bcrypt.hash(this.contrasenya, salt);
+  }
+
+  async comparePassword(contrasenya) {
+    return await bcrypt.compare(contrasenya, this.contrasenya);
+  }
+
+  toJSON() {
+    return {
+      nom: this.nom,
+      rol: this.rol
+    };
+  }
+}
+
+class Administrador extends Usuario {
+  constructor(nom, contrasenya) {
+    super(nom, contrasenya, "admin");
+  }
+
+  static async createAdminIfNotExists(UsuarioModel) {
+    const admin = await UsuarioModel.findOne({ nom: "admin" });
+    if (!admin) {
+      const newAdmin = new Administrador("admin", "admin123");
+      await newAdmin.encryptPassword();
+      await UsuarioModel.create(newAdmin);
+      console.log("Usuario admin creado");
+    }
+  }
+
+  // Métodos específicos de administrador
+  async listUsers(UsuarioModel) {
+    return await UsuarioModel.find({}, { contrasenya: 0 });
+  }
+
+  async deleteUser(UsuarioModel, nom) {
+    return await UsuarioModel.deleteOne({ nom });
+  }
+
+  async modifyUser(UsuarioModel, nom, nuevoNom) {
+    return await UsuarioModel.updateOne({ nom }, { $set: { nom: nuevoNom } });
+  }
+}
+
+// 🛠️ Configuración del Servidor
 class ServerConfig {
   constructor() {
     this.port = 8888;
@@ -23,10 +78,11 @@ class ServerConfig {
   }
 }
 
+// 🗃️ Base de Datos
 class Database {
   constructor() {
     this.connect();
-    this.Usuario = this.createUserModel();
+    this.UsuarioModel = this.createUserModel();
   }
 
   connect() {
@@ -48,17 +104,9 @@ class Database {
     });
     return mongoose.model("Usuario", usuarioSchema);
   }
-
-  async createAdminUser() {
-    const admin = await this.Usuario.findOne({ nom: "admin" });
-    if (!admin) {
-      const hash = await bcrypt.hash("admin123", 10);
-      await this.Usuario.create({ nom: "admin", contrasenya: hash, rol: "admin" });
-      console.log("Usuario admin creado");
-    }
-  }
 }
 
+// 🧰 Utilidades
 class Utils {
   static async parseBody(req) {
     return new Promise((resolve) => {
@@ -84,6 +132,7 @@ class Utils {
   }
 }
 
+// 🖥️ Manejador de Peticiones
 class RequestHandler {
   constructor(db, config) {
     this.db = db;
@@ -95,37 +144,52 @@ class RequestHandler {
     const pathname = parsedUrl.pathname;
     const method = req.method;
 
-    // Route handling
-    if (pathname === "/login" && method === "GET") {
-      return this.handleLogin(req, res, parsedUrl);
-    } else if (pathname === "/agregarUsuario" && method === "POST") {
-      return this.handleAddUser(req, res);
-    } else if (pathname === "/listarUsuarios" && method === "GET") {
-      return this.handleListUsers(req, res);
-    } else if (pathname === "/eliminarUsuario" && method === "DELETE") {
-      return this.handleDeleteUser(req, res, parsedUrl);
-    } else if (pathname === "/modificarUsuario" && method === "PUT") {
-      return this.handleModifyUser(req, res, parsedUrl);
-    } else if (pathname === "/usuarios" && method === "GET") {
-      return this.handleUsersPage(req, res);
-    } else if (pathname === "/agregar-usuario" && method === "GET") {
-      return this.handleAddUserPage(req, res);
-    } else if (pathname === "/" || pathname.endsWith(".html")) {
-      return this.handlePageRequest(req, res, pathname);
-    } else {
-      return this.handleStaticFile(req, res, pathname);
+    try {
+      if (pathname === "/login" && method === "GET") {
+        await this.handleLogin(req, res, parsedUrl);
+      } else if (pathname === "/agregarUsuario" && method === "POST") {
+        await this.handleAddUser(req, res);
+      } else if (pathname === "/listarUsuarios" && method === "GET") {
+        await this.handleListUsers(req, res);
+      } else if (pathname === "/eliminarUsuario" && method === "DELETE") {
+        await this.handleDeleteUser(req, res, parsedUrl);
+      } else if (pathname === "/modificarUsuario" && method === "PUT") {
+        await this.handleModifyUser(req, res, parsedUrl);
+      } else if (pathname === "/usuarios" && method === "GET") {
+        await this.handleUsersPage(req, res);
+      } else if (pathname === "/agregar-usuario" && method === "GET") {
+        await this.handleAddUserPage(req, res);
+      } else if (pathname === "/" || pathname.endsWith(".html")) {
+        await this.handlePageRequest(req, res, pathname);
+      } else {
+        await this.handleStaticFile(req, res, pathname);
+      }
+    } catch (error) {
+      console.error("Error handling request:", error);
+      Utils.send(res, 500, { mensaje: "Error interno del servidor" });
     }
   }
 
   async handleLogin(req, res, parsedUrl) {
     const { nom, contrasenya } = parsedUrl.query;
-    const user = await this.db.Usuario.findOne({ nom });
-    const auth = user && (await bcrypt.compare(contrasenya, user.contrasenya));
+    const userDoc = await this.db.UsuarioModel.findOne({ nom });
     
+    if (!userDoc) {
+      return Utils.send(res, 401, { mensaje: "Credenciales incorrectas" });
+    }
+
+    let user;
+    if (userDoc.rol === "admin") {
+      user = new Administrador(userDoc.nom, userDoc.contrasenya);
+    } else {
+      user = new Usuario(userDoc.nom, userDoc.contrasenya, userDoc.rol);
+    }
+
+    const auth = await user.comparePassword(contrasenya);
     if (auth) {
       Utils.send(res, 200, { 
         mensaje: "Usuario autenticado", 
-        usuario: { nom: user.nom, rol: user.rol } 
+        usuario: user.toJSON() 
       });
     } else {
       Utils.send(res, 401, { mensaje: "Credenciales incorrectas" });
@@ -134,8 +198,9 @@ class RequestHandler {
 
   async handleAddUser(req, res) {
     const { nom, contrasenya } = await Utils.parseBody(req);
-    const hash = await bcrypt.hash(contrasenya, 10);
-    await this.db.Usuario.create({ nom, contrasenya: hash });
+    const user = new Usuario(nom, contrasenya);
+    await user.encryptPassword();
+    await this.db.UsuarioModel.create(user);
     Utils.send(res, 200, { mensaje: "Usuario agregado" });
   }
 
@@ -146,13 +211,21 @@ class RequestHandler {
     const usuario = JSON.parse(usuarioStr);
     if (usuario?.rol !== "admin") return Utils.send(res, 403, { mensaje: "Acceso denegado" });
 
-    const usuarios = await this.db.Usuario.find({}, { contrasenya: 0 });
+    const admin = new Administrador(usuario.nom, "");
+    const usuarios = await admin.listUsers(this.db.UsuarioModel);
     Utils.send(res, 200, { usuarios });
   }
 
   async handleDeleteUser(req, res, parsedUrl) {
     const { nom } = parsedUrl.query;
-    const result = await this.db.Usuario.deleteOne({ nom });
+    const usuarioStr = req.headers["usuario"];
+    if (!usuarioStr) return Utils.send(res, 401, { mensaje: "No se ha proporcionado el usuario" });
+    
+    const usuario = JSON.parse(usuarioStr);
+    if (usuario?.rol !== "admin") return Utils.send(res, 403, { mensaje: "Acceso denegado" });
+
+    const admin = new Administrador(usuario.nom, "");
+    const result = await admin.deleteUser(this.db.UsuarioModel, nom);
     
     if (result.deletedCount > 0) {
       Utils.send(res, 200, { mensaje: "Usuario eliminado" });
@@ -163,7 +236,14 @@ class RequestHandler {
 
   async handleModifyUser(req, res, parsedUrl) {
     const { nom, nuevoNom } = parsedUrl.query;
-    const result = await this.db.Usuario.updateOne({ nom }, { $set: { nom: nuevoNom } });
+    const usuarioStr = req.headers["usuario"];
+    if (!usuarioStr) return Utils.send(res, 401, { mensaje: "No se ha proporcionado el usuario" });
+    
+    const usuario = JSON.parse(usuarioStr);
+    if (usuario?.rol !== "admin") return Utils.send(res, 403, { mensaje: "Acceso denegado" });
+
+    const admin = new Administrador(usuario.nom, "");
+    const result = await admin.modifyUser(this.db.UsuarioModel, nom, nuevoNom);
     
     if (result.matchedCount > 0) {
       Utils.send(res, 200, { mensaje: "Usuario modificado" });
@@ -180,7 +260,8 @@ class RequestHandler {
     if (usuario?.rol !== "admin") return Utils.send(res, 403, { mensaje: "Acceso denegado" });
 
     try {
-      const usuarios = await this.db.Usuario.find({}, { contrasenya: 0 });
+      const admin = new Administrador(usuario.nom, "");
+      const usuarios = await admin.listUsers(this.db.UsuarioModel);
       const html = Utils.renderPug(this.config.viewsDir, "usuarios", { usuarios });
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(html);
@@ -209,7 +290,7 @@ class RequestHandler {
     }
   }
 
-  handlePageRequest(req, res, pathname) {
+  async handlePageRequest(req, res, pathname) {
     const templateName = pathname === "/" ? "index" : pathname.replace(".html", "").substring(1);
     
     try {
@@ -223,7 +304,7 @@ class RequestHandler {
     }
   }
 
-  handleStaticFile(req, res, pathname) {
+  async handleStaticFile(req, res, pathname) {
     const filePath = path.join(this.config.publicDir, pathname);
     const ext = path.extname(filePath);
 
@@ -240,6 +321,7 @@ class RequestHandler {
   }
 }
 
+// 🌐 Servidor Web
 class WebServer {
   constructor() {
     this.config = new ServerConfig();
@@ -248,14 +330,13 @@ class WebServer {
     this.server = http.createServer((req, res) => this.requestHandler.handleRequest(req, res));
   }
 
-  start() {
-    this.db.createAdminUser();
+  async start() {
+    await Administrador.createAdminIfNotExists(this.db.UsuarioModel);
     this.server.listen(this.config.port, () => {
       console.log(`Servidor corriendo en http://localhost:${this.config.port}`);
     });
   }
 }
 
-// Iniciar el servidor
 const webServer = new WebServer();
-webServer.start();
+webServer.start().catch(err => console.error("Error al iniciar el servidor:", err));
