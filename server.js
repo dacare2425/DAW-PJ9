@@ -87,7 +87,7 @@ class Database {
   }
 
   connect() {
-    mongoose.connect("mongodb://127.0.0.1:27018/usuarios", {
+    mongoose.connect("mongodb://127.0.0.1:27017/usuarios", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -224,40 +224,60 @@ class RequestHandler {
   }
 
   async handleDeleteUser(req, res, parsedUrl) {
-    const { nom } = parsedUrl.query;
-    const usuarioStr = req.headers["usuario"];
-    if (!usuarioStr) return Utils.send(res, 401, { mensaje: "No se ha proporcionado el usuario" });
-    
-    const usuario = JSON.parse(usuarioStr);
-    if (usuario?.rol !== "admin") return Utils.send(res, 403, { mensaje: "Acceso denegado" });
+    const { nom } = parsedUrl.query; // Obtener solo el 'nom' de la URL
+    const usuarioStr = req.headers["usuario"]; // Obtener el parámetro 'usuario' desde el encabezado
 
-    const admin = new Administrador(usuario.nom, "");
+    if (!usuarioStr) {
+        return Utils.send(res, 401, { mensaje: "No se ha proporcionado el usuario" });
+    }
+
+    let usuarioObj;
+    try {
+        usuarioObj = JSON.parse(usuarioStr);  // Intentar convertir 'usuario' de string a objeto JSON
+    } catch (err) {
+        return Utils.send(res, 400, { mensaje: "El parámetro 'usuario' está malformado" });
+    }
+
+    if (usuarioObj?.rol !== "admin") {
+        return Utils.send(res, 403, { mensaje: "Acceso denegado" });
+    }
+
+    const admin = new Administrador(usuarioObj.nom, "");
     const result = await admin.deleteUser(this.db.UsuarioModel, nom);
-    
     if (result.deletedCount > 0) {
-      Utils.send(res, 200, { mensaje: "Usuario eliminado" });
+        return Utils.send(res, 200, { mensaje: "Usuario eliminado" });
     } else {
-      Utils.send(res, 404, { mensaje: "Usuario no encontrado" });
+        return Utils.send(res, 404, { mensaje: "Usuario no encontrado" });
     }
+}
+
+
+async handleModifyUser(req, res, parsedUrl) {
+  const { nom, nuevoNom } = parsedUrl.query;
+  const usuarioStr = req.headers["usuario"]; // Obtener el parámetro 'usuario' desde el encabezado
+
+  if (!usuarioStr) {
+      return Utils.send(res, 401, { mensaje: "No se ha proporcionado el usuario" });
   }
 
-  async handleModifyUser(req, res, parsedUrl) {
-    const { nom, nuevoNom } = parsedUrl.query;
-    const usuarioStr = req.headers["usuario"];
-    if (!usuarioStr) return Utils.send(res, 401, { mensaje: "No se ha proporcionado el usuario" });
-    
-    const usuario = JSON.parse(usuarioStr);
-    if (usuario?.rol !== "admin") return Utils.send(res, 403, { mensaje: "Acceso denegado" });
-
-    const admin = new Administrador(usuario.nom, "");
-    const result = await admin.modifyUser(this.db.UsuarioModel, nom, nuevoNom);
-    
-    if (result.matchedCount > 0) {
-      Utils.send(res, 200, { mensaje: "Usuario modificado" });
-    } else {
-      Utils.send(res, 404, { mensaje: "Usuario no encontrado" });
-    }
+  let usuarioObj;
+  try {
+      usuarioObj = JSON.parse(usuarioStr);  // Intentar convertir 'usuario' de string a objeto JSON
+  } catch (err) {
+      return Utils.send(res, 400, { mensaje: "El parámetro 'usuario' está malformado" });
   }
+
+  if (usuarioObj?.rol !== "admin") {
+      return Utils.send(res, 403, { mensaje: "Acceso denegado" });
+  }
+
+  const admin = new Administrador(usuarioObj.nom, "");
+  const result = await admin.modifyUser(this.db.UsuarioModel, nom, nuevoNom);
+  result.matchedCount > 0
+    ? Utils.send(res, 200, { mensaje: "Usuario modificado" })
+    : Utils.send(res, 404, { mensaje: "Usuario no encontrado" });
+}
+
 
   async handleUsersPage(req, res) {
     const usuarioStr = req.headers["usuario"];

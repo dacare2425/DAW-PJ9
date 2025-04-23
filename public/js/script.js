@@ -83,17 +83,49 @@ let crud = {
     
     async eliminarUsuario(nom) {
         if (confirm(`¿Estás seguro de que deseas eliminar a ${nom}?`)) {
-            const res = await fetch(`/eliminarUsuario?nom=${nom}`, { method: 'DELETE' });
+            // Obtén el usuario del localStorage
+            const usuario = localStorage.getItem("usuario");
+            
+            if (!usuario) {
+                alert("No estás autorizado para realizar esta acción.");
+                return;
+            }
+    
+            // Enviar la solicitud DELETE con el encabezado 'usuario' y el parámetro 'nom'
+            const res = await fetch(`/eliminarUsuario?nom=${nom}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'usuario': usuario // Agregar el usuario al encabezado
+                }
+            });
+    
             const data = await res.json();
             alert(data.mensaje);
             await crud.cargarUsuarios();
         }
     },
-    
+        
     async modificarUsuario(nom) {
         const nuevoNombre = prompt("Nuevo nombre para " + nom, nom);
         if (nuevoNombre && nuevoNombre !== nom) {
-            const res = await fetch(`/modificarUsuario?nom=${nom}&nuevoNom=${nuevoNombre}`, { method: 'PUT' });
+            // Obtén el usuario del localStorage
+            const usuario = localStorage.getItem("usuario");
+    
+            if (!usuario) {
+                alert("No estás autorizado para realizar esta acción.");
+                return;
+            }
+    
+            // Enviar la solicitud PUT con el encabezado 'usuario' y los parámetros 'nom' y 'nuevoNom'
+            const res = await fetch(`/modificarUsuario?nom=${nom}&nuevoNom=${nuevoNombre}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'usuario': usuario // Agregar el usuario al encabezado
+                }
+            });
+    
             const data = await res.json();
             alert(data.mensaje);
             await crud.cargarUsuarios();
