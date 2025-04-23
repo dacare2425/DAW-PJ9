@@ -162,6 +162,12 @@ class RequestHandler {
       } else if (pathname === "/agregar-usuario" && method === "GET") {
         await this.handleAddUserPage(req, res);
       } else if (pathname === "/" || pathname.endsWith(".html")) {
+        
+        if (pathname === "/") {
+          res.writeHead(302, { Location: "/vue-home.html" });
+          return res.end();
+        }
+      
         await this.handlePageRequest(req, res, pathname);
       } else {
         await this.handleStaticFile(req, res, pathname);
