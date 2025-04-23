@@ -74,6 +74,7 @@ class ServerConfig {
       ".jpg": "image/jpeg",
       ".jpeg": "image/jpeg",
       ".webp": "image/webp",
+      ".html": "text/html",
     };
   }
 }
@@ -86,10 +87,11 @@ class Database {
   }
 
   connect() {
-    mongoose.connect("mongodb://127.0.0.1:27017/usuarios", {
+    mongoose.connect("mongodb://127.0.0.1:27018/usuarios", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    
     
     const db = mongoose.connection;
     db.on("error", console.error.bind(console, "Error de conexión a MongoDB:"));
@@ -291,8 +293,17 @@ class RequestHandler {
   }
 
   async handlePageRequest(req, res, pathname) {
-    const templateName = pathname === "/" ? "index" : pathname.replace(".html", "").substring(1);
-    
+    // 1) Si existe un .html en public/, sírvelo directamente
+    const staticPath = path.join(this.config.publicDir, pathname);
+    if (fs.existsSync(staticPath)) {
+      return this.handleStaticFile(req, res, pathname);
+    }
+  
+    // 2) Si no existe, intenta renderizarlo como plantilla Pug
+    const templateName = pathname === "/"
+      ? "index"
+      : pathname.replace(".html", "").substring(1);
+  
     try {
       const html = Utils.renderPug(this.config.viewsDir, templateName);
       res.writeHead(200, { "Content-Type": "text/html" });

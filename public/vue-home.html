@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mapa VueJS</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+  />
+  <link rel="stylesheet" href="./css/home.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="d-flex justify-content-between p-3">
+      <div class="header-left">
+        <a href="index.html">
+          <img src="./img/pj10-removebg-preview.png" alt="Logo" />
+        </a>
+        <ul class="d-flex list-unstyled gap-3 mb-0">
+          <li><a href="#" @click.prevent="go('historicos')">Históricos</a></li>
+          <li><a href="#" @click.prevent="go('economicos')">Económicos</a></li>
+          <li><a href="#" @click.prevent="go('culturales')">Culturales</a></li>
+          <li><a href="#" @click.prevent="go('tecnologicos')">Tecnológicos</a></li>
+          <li><a href="#" @click.prevent="go('quiz')">QUIZ</a></li>
+          <li>
+            <a
+              href="#"
+              @click.prevent="go('urlFiltro', { pais: selectedCountry })"
+              >URL FILTRO</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="header-right">
+        <ul id="user-menu" class="d-flex list-unstyled gap-3 mb-0">
+          <li v-if="!user"><a href="login.html">Login</a></li>
+          <li v-if="!user"><a href="register.html">Register</a></li>
+          <li v-if="user && user.rol==='admin'">
+            <a href="admin.html">Administración</a>
+          </li>
+          <li v-if="user"><a href="#" @click.prevent="logout()">Log out</a></li>
+          <li v-if="user"><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+      <canvas id="canva"></canvas>
+
+      <section class="about-section light-background p-4">
+        <div class="about-content d-flex align-items-center gap-3 reverse">
+          <img
+            src="https://ekonomicos.com/wp-content/uploads/2015/11/revolucion-industrial-1.jpg"
+            alt="Revolución Industrial"
+            class="img-fluid rounded"
+          />
+          <div class="text">
+            <h2>La Revolución Industrial y el Crecimiento Poblacional</h2>
+            <p>
+              Desde finales del siglo XVIII, la Revolución Industrial trajo
+              avances tecnológicos que permitieron una mejor producción
+              agrícola y mejores condiciones sanitarias, lo que llevó a un
+              rápido crecimiento de la población en Europa.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- ...otras secciones iguales a tu Pug... -->
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        selectedCountry: '',
+        user: null,
+        squares: [
+            { x: 650, y: 110, width: 150, height: 100, color: 'transparent', url: "Islandia" },
+            { x: 710, y: 500, width: 80, height: 80, color: 'transparent', url: "Irlanda" },
+            { x: 800, y: 400, width: 120, height: 200, color: 'transparent', url: "UK" },
+            { x: 820, y: 660, width: 200, height: 150, color: 'transparent', url: "Francia" },
+            { x: 700, y: 820, width: 185, height: 150, color: 'transparent', url: "España" },
+            { x: 1050, y: 520, width: 110, height: 180, color: 'transparent', url: "Alemania" },
+            { x: 990, y: 550, width: 40, height: 60, color: 'transparent', url: "Holanda" },
+            { x: 965, y: 610, width: 50, height: 30, color: 'transparent', url: "Bélgica" },
+            { x: 1025, y: 705, width: 80, height: 50, color: 'transparent', url: "Suiza" },
+            { x: 1075, y: 770, width: 180, height: 280, color: 'transparent', url: "Italia" },
+            { x: 1160, y: 725, width: 60, height: 50, color: 'transparent', url: "Slovenia" },
+            { x: 620, y: 820, width: 60, height: 150, color: 'transparentn', url: "Portugal" },
+            { x: 1140, y: 680, width: 90, height: 50, color: 'transparent', url: "Austria" },
+            { x: 1160, y: 620, width: 100, height: 50, color: 'transparent', url:"Chequia" },
+            { x: 1250, y: 650, width: 100, height: 45, color: 'transparent', url:"Eslovaquia" },
+            { x: 1240, y: 700, width: 100, height: 45, color: 'transparent', url:"Hungria" },
+            { x: 1190, y: 500, width: 150, height: 150, color: 'transparent', url:"Polonia" },
+            { x: 1150, y: 150, width: 75, height: 350, color: 'transparent', url:"Suecia" },
+            { x: 1025, y: 250, width: 100, height: 200, color: 'transparent', url:"Noruega" },
+            { x: 1250, y: 150, width: 125, height: 200, color: 'transparent', url:"Finlandia" },
+            { x: 1025, y: 460, width: 100, height: 50, color: 'transparent', url:"Dinamarca" },
+            { x: 1250, y: 460, width: 125, height: 50, color: 'transparent', url:"Lituania" },
+            { x: 1270, y: 410, width: 125, height: 50, color: 'transparent', url:"Latvia" },
+            { x: 1315, y: 360, width: 75, height: 50, color: 'transparent', url:"Estonia" },
+            { x: 1470, y: 20, width: 300, height: 500, color: 'transparent', url:"Rusia" },
+            { x: 1370, y: 550, width: 300, height: 150, color: 'transparent', url:"Ucrania" },
+            { x: 1520, y: 800, width: 250, height: 150, color: 'transparent', url:"Turquia" },
+            { x: 1350, y: 450, width: 125, height: 100, color: 'transparent', url:"Belarus" },
+            { x: 1350, y: 675, width: 125, height: 100, color: 'transparent', url:"Romania" },
+            { x: 1400, y: 775, width: 100, height: 75, color: 'transparent', url:"Bulgaria" },
+            { x: 1200, y: 745, width: 100, height: 45, color: 'transparent', url:"Croacia" },
+            { x: 1300, y: 745, width: 80, height: 90, color: 'transparent', url:"Serbia" },
+            { x: 1280, y: 800, width: 40, height: 45, color: 'transparent', url:"Montenegro" },
+            { x: 1260, y: 775, width: 40, height: 45, color: 'transparent', url:"Bosnia" },
+            { x: 1320, y: 840, width: 40, height: 50, color: 'transparent', url:"Albania" },
+            { x: 1360, y: 835, width: 40, height: 40, color: 'transparent', url:"Macedonia" },
+            { x: 1330, y: 880, width: 180, height: 100, color: 'transparent', url:"Macedonia" },
+            { x: 1680, y: 950, width: 50, height: 30, color: 'transparent', url:"Macedonia" },
+        ],
+        BASE_WIDTH: 1920,
+        BASE_HEIGHT: 1080,
+      },
+      methods: {
+        go(route, params) {
+          if (route === 'urlFiltro') {
+            const pais = params.pais || '';
+            window.location.href = `urlFiltro.html?pais=${pais}`;
+          } else {
+            window.location.href = `${route}.html`;
+          }
+        },
+        logout() {
+          localStorage.removeItem('usuario');
+          this.user = null;
+          window.location.href = 'index.html';
+        },
+        draw() {
+          const canva = this.$el.querySelector('#canva');
+          canva.width = window.innerWidth * 0.9;
+          canva.height = window.innerHeight * 0.9;
+          const ctx = canva.getContext('2d');
+          const scaleX = canva.width / this.BASE_WIDTH;
+          const scaleY = canva.height / this.BASE_HEIGHT;
+          const img = new Image();
+          img.src = '../img/71vs.webp';
+          img.onload = () => {
+            ctx.clearRect(0, 0, canva.width, canva.height);
+            ctx.drawImage(img, 0, 0, canva.width, canva.height);
+            this.squares.forEach(sq => {
+              ctx.fillStyle = 'transparent';
+              ctx.fillRect(
+                sq.x * scaleX,
+                sq.y * scaleY,
+                sq.width * scaleX,
+                sq.height * scaleY
+              );
+            });
+          };
+        },
+        onMouseMove(e) {
+          const canva = this.$el.querySelector('#canva');
+          const rect = canva.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const scaleX = canva.width / this.BASE_WIDTH;
+          const scaleY = canva.height / this.BASE_HEIGHT;
+          let over = false;
+          this.squares.forEach(sq => {
+            const sx = sq.x * scaleX;
+            const sy = sq.y * scaleY;
+            const sw = sq.width * scaleX;
+            const sh = sq.height * scaleY;
+            if (x >= sx && x <= sx + sw && y >= sy && y <= sy + sh) {
+              canva.style.cursor = 'pointer';
+              over = true;
+            }
+          });
+          if (!over) canva.style.cursor = 'default';
+        },
+        onClick(e) {
+          const canva = this.$el.querySelector('#canva');
+          const rect = canva.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const scaleX = canva.width / this.BASE_WIDTH;
+          const scaleY = canva.height / this.BASE_HEIGHT;
+          this.squares.forEach(sq => {
+            const sx = sq.x * scaleX;
+            const sy = sq.y * scaleY;
+            const sw = sq.width * scaleX;
+            const sh = sq.height * scaleY;
+            if (x >= sx && x <= sx + sw && y >= sy && y <= sy + sh) {
+              this.selectedCountry = sq.url;
+              window.location.href = `urlFiltro.html?pais=${sq.url}`;
+            }
+          });
+        }
+      },
+      mounted() {
+        // carga usuario
+        const u = localStorage.getItem('usuario');
+        if (u) this.user = JSON.parse(u);
+
+        // dibuja y eventos
+        this.draw();
+        window.addEventListener('resize', this.draw);
+        const canva = this.$el.querySelector('#canva');
+        canva.addEventListener('mousemove', this.onMouseMove);
+        canva.addEventListener('click', this.onClick);
+      },
+      beforeDestroy() {
+        window.removeEventListener('resize', this.draw);
+        const canva = this.$el.querySelector('#canva');
+        canva.removeEventListener('mousemove', this.onMouseMove);
+        canva.removeEventListener('click', this.onClick);
+      }
+    });
+  </script>
+</body>
+</html>
